@@ -1,0 +1,62 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath "io.realm:realm-gradle-plugin:2.1.1"
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+ext {
+    minSdkVersion = 15
+    targetSdkVersion = 25
+    compileSdkVersion = 25
+    buildToolsVersion = '25.0.0'
+    sourceCompatibilityVersion = JavaVersion.VERSION_1_8
+    targetCompatibilityVersion = JavaVersion.VERSION_1_8
+}
+
+def androidSupportVersion = '24.2.1'
+def loganSquareVersion = '1.3.6'
+def butterKnifeVersion = '8.4.0'
+def daggerVersion = '2.6.1'
+def permissionsdispatcher = '2.1.3'
+
+ext.deps = [
+    supportV4: 'com.android.support:support-v4:'+androidSupportVersion,
+    cardView:  'com.android.support:cardview-v7:'+androidSupportVersion,
+    supportDesign:  'com.android.support:design:'+androidSupportVersion,
+    supportRecyclerView:  'com.android.support:recyclerview-v7:'+androidSupportVersion,
+    supportAppCompat:  'com.android.support:appcompat-v7:'+androidSupportVersion,
+
+    loganSquareAnnotationProcessor: 'com.bluelinelabs:logansquare-compiler:'+loganSquareVersion,
+    loganSquareVersion: 'com.bluelinelabs:logansquare:'+loganSquareVersion,
+
+    retrofitLoganConvertor: 'com.github.aurae.retrofit2:converter-logansquare:1.4.1',
+
+    butterKnife: 'com.jakewharton:butterknife:' +butterKnifeVersion,
+    butterKnifeCompiler: 'com.jakewharton:butterknife-compiler:' + butterKnifeVersion,
+
+    permissionDispatcherVersion: 'com.github.hotchemi:permissionsdispatcher:'+permissionsdispatcher,
+    permissionDispatcherAnnotationProcessor: 'com.github.hotchemi:permissionsdispatcher-processor:'+permissionsdispatcher,
+
+    dagger: 'com.google.dagger:dagger:' + daggerVersion,
+    daggerCompiler:'com.google.dagger:dagger-compiler:' +daggerVersion,
+]

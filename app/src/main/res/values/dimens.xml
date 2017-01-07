@@ -1,0 +1,54 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <!-- Margins -->
+    <dimen name="margin_one">1dp</dimen>
+    <dimen name="margin_two">2dp</dimen>
+    <dimen name="margin_three">3dp</dimen>
+    <dimen name="margin_four">4dp</dimen>
+    <dimen name="margin_five">5dp</dimen>
+    <dimen name="margin_six">6dp</dimen>
+    <dimen name="margin_seven">7dp</dimen>
+    <dimen name="margin_eight">8dp</dimen>
+    <dimen name="margin_ten">10dp</dimen>
+    <dimen name="margin_eleven">11dp</dimen>
+    <dimen name="margin_twelve">12dp</dimen>
+    <dimen name="margin_thirteen">13dp</dimen>
+    <dimen name="margin_forteen">14dp</dimen>
+    <dimen name="margin_fifteen">15dp</dimen>
+    <dimen name="margin_sixteen">16dp</dimen>
+    <dimen name="margin_seventeen">17dp</dimen>
+    <dimen name="margin_eighteen">18dp</dimen>
+    <dimen name="margin_nineteen">19dp</dimen>
+    <dimen name="margin_twenty">20dp</dimen>
+    <dimen name="margin_twentyTwo">22dp</dimen>
+    <dimen name="margin_twentyFour">24dp</dimen>
+    <dimen name="margin_twentyFive">25dp</dimen>
+    <dimen name="margin_twentySix">26dp</dimen>
+    <dimen name="margin_twentyEight">28dp</dimen>
+    <dimen name="margin_thirty">30dp</dimen>
+    <dimen name="margin_thirtyFive">35dp</dimen>
+    <dimen name="margin_forty">40dp</dimen>
+    <dimen name="margin_fotyFive">45dp</dimen>
+    <dimen name="margin_fifty">50dp</dimen>
+    <dimen name="margin_sixty">60dp</dimen>
+
+    <!--  Fonts-->
+    <dimen name="font_ten">10sp</dimen>
+    <dimen name="font_eleven">11sp</dimen>
+    <dimen name="font_twelve">12sp</dimen>
+    <dimen name="font_thirteen">13sp</dimen>
+    <dimen name="font_fourteen">14sp</dimen>
+    <dimen name="font_fifteen">15sp</dimen>
+    <dimen name="font_sixteen">16sp</dimen>
+    <dimen name="font_seventeen">17sp</dimen>
+    <dimen name="font_eighteen">18sp</dimen>
+    <dimen name="font_nineteen">19sp</dimen>
+    <dimen name="font_twenty">20sp</dimen>
+    <dimen name="font_twentyTwo">22sp</dimen>
+    <dimen name="font_twentyFour">24sp</dimen>
+    <dimen name="font_twentyFive">25sp</dimen>
+</resources>

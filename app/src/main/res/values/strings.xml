@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Chat with Bot</string>
+
+    <string name="toast_enter_message">Please enter a message</string>
+
+
+</resources>

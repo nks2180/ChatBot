@@ -37,11 +37,11 @@ public class CBApplication extends Application {
 
         mComponent.inject(this);
         Realm.init(this);
-        RealmConfiguration config = new RealmConfiguration
+        RealmConfiguration realmConfiguration = new RealmConfiguration
                 .Builder()
                 .deleteRealmIfMigrationNeeded()
                 .build();
-
+        Realm.setDefaultConfiguration(realmConfiguration);
     }
 
     public ApplicationComponent getComponent() {

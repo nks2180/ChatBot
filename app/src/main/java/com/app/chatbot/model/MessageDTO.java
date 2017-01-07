@@ -2,28 +2,36 @@ package com.app.chatbot.model;/**
  * Created by niranjan on 1/7/17.
  */
 
-import com.bluelinelabs.logansquare.annotation.JsonField;
-import com.bluelinelabs.logansquare.annotation.JsonObject;
-
-import java.io.Serializable;
+import io.realm.RealmObject;
+import io.realm.annotations.Index;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * @author niranjan
  * @since 1/7/17
  */
-@JsonObject
-public class Message implements Serializable{
 
-    @JsonField(name = "chatBotName")
+public class MessageDTO extends RealmObject {
+
+    @PrimaryKey
+    @Index
+    public int id;
+
     private String chatBotName;
-    @JsonField(name = "chatBotID")
     private int chatBotID;
-    @JsonField(name = "message")
     private String message;
-    @JsonField(name = "emotion")
     private String emotion;
-
     private boolean fromBot;
+    private int messageDeliveryStatus;
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getChatBotName() {
         return chatBotName;
@@ -65,14 +73,22 @@ public class Message implements Serializable{
         this.fromBot = fromBot;
     }
 
-    public Message(){
+    public int getMessageDeliveryStatus() {
+        return messageDeliveryStatus;
+    }
+
+    public void setMessageDeliveryStatus(int messageDeliveryStatus) {
+        this.messageDeliveryStatus = messageDeliveryStatus;
+    }
+
+    public MessageDTO(){
 
     }
-   public Message(MessageDTO messageDTO){
-       setMessage(messageDTO.getMessage());
-       setFromBot(messageDTO.isFromBot());
-       setChatBotID(messageDTO.getChatBotID());
-       setChatBotName(messageDTO.getChatBotName());
-       setEmotion(messageDTO.getEmotion());
-   }
+    public MessageDTO (Message message){
+        setMessage(message.getMessage());
+        setFromBot(message.isFromBot());
+        setChatBotID(message.getChatBotID());
+        setChatBotName(message.getChatBotName());
+        setEmotion(message.getEmotion());
+    }
 }

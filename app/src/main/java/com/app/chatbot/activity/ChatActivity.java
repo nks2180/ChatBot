@@ -14,6 +14,7 @@ import com.app.chatbot.R;
 import com.app.chatbot.adapter.ChatAdapter;
 import com.app.chatbot.component.ApplicationComponent;
 import com.app.chatbot.model.Message;
+import com.app.chatbot.model.MessageDTO;
 import com.app.chatbot.presenter.ChatPresenter;
 import com.app.chatbot.presenter.ChatView;
 import com.app.chatbot.utils.CBUtils;
@@ -21,11 +22,15 @@ import com.app.chatbot.utils.RecyclerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.realm.Realm;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
 
 /**
  * @author niranjan
@@ -55,7 +60,7 @@ public class ChatActivity extends BaseViewPresenterActivity<ChatPresenter> imple
         mContext = this;
 
         setUpRecyclerView();
-
+        getMessagesFromDB();
     }
 
     private void setUpRecyclerView() {
@@ -89,6 +94,7 @@ public class ChatActivity extends BaseViewPresenterActivity<ChatPresenter> imple
             messages = new ArrayList<>();
         message.setFromBot(true);
         messages.add(message);
+        saveMessageIntoDB(message);
         mAdapter.notifyDataSetChanged();
         recVwMessages.smoothScrollToPosition(messages.size()-1);
     }
@@ -98,20 +104,49 @@ public class ChatActivity extends BaseViewPresenterActivity<ChatPresenter> imple
         String chatMessage = edtTxtChat.getText().toString().trim();
         if (!TextUtils.isEmpty(chatMessage)) {
             chatPresenter.getBotResponse(chatMessage);
-            addSelftChatMessage(chatMessage);
+            addSelfChatMessage(chatMessage);
             edtTxtChat.setText("");
         }
         else
             CBUtils.showToast(mContext, getString(R.string.toast_enter_message));
     }
 
-    private void addSelftChatMessage(String chatMessage) {
+    private void addSelfChatMessage(String chatMessage) {
         Message message = new Message();
         message.setFromBot(false);
         message.setMessage(chatMessage);
+
         messages.add(message);
         mAdapter.notifyDataSetChanged();
         recVwMessages.smoothScrollToPosition(messages.size()-1);
+        saveMessageIntoDB(message);
+    }
+
+    private void saveMessageIntoDB(Message message){
+        Random rand = new Random();
+        int  n = rand.nextInt(999999) + 1;
+        MessageDTO messageDTO = new MessageDTO(message);
+        messageDTO.setId(n);
+
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        realm.copyToRealmOrUpdate(messageDTO);
+        realm.commitTransaction();
+    }
+
+
+    private void getMessagesFromDB() {
+        Realm realm = Realm.getDefaultInstance();
+        RealmQuery<MessageDTO> query = realm.where(MessageDTO.class);
+        RealmResults<MessageDTO> messageDTOs = query.findAll();
+
+        if (null != messageDTOs && messageDTOs.size() > 0) {
+            for (MessageDTO messageDTO :  messageDTOs){
+                Message message = new Message(messageDTO);
+                messages.add(message);
+            }
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
 }

@@ -8,14 +8,23 @@ import android.util.Log;
 import com.app.chatbot.executor.ParsingExecutor;
 import com.app.chatbot.model.ChatResponse;
 import com.app.chatbot.model.Message;
+import com.app.chatbot.model.MessageDTO;
+import com.app.chatbot.model.MessageDeliveryStatus;
 import com.app.chatbot.retrofit.ApiController;
 import com.app.chatbot.retrofit.ApiDataReceiveCallback;
 import com.app.chatbot.retrofit.NetworkConstants;
 import com.app.chatbot.retrofit.RequestBuilder;
+import com.app.chatbot.utils.CBLogger;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.inject.Inject;
+
+import io.realm.Realm;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
 
 /**
  * @author niranjan
@@ -73,5 +82,41 @@ public class ChatPresenter extends BasePresenterImpl<ChatView> implements ApiDat
     public void onError(int type, HashMap<String, String> params) {
         String message = params.get("message");
         int id = Integer.parseInt(params.get("id"));
+    }
+
+    public void getChatMessagesFromDB() {
+        List<Message> messages = new ArrayList<>();
+        Realm realm = Realm.getDefaultInstance();
+        RealmQuery<MessageDTO> query = realm.where(MessageDTO.class);
+        RealmResults<MessageDTO> messageDTOs = query.findAll();
+
+        if (null != messageDTOs && messageDTOs.size() > 0) {
+            for (MessageDTO messageDTO : messageDTOs) {
+                Message message = new Message(messageDTO);
+                messages.add(message);
+                checkifMessageWasSuccessFullySent(message);
+            }
+            view.onChatMessagesFetchedFromDB(messages);
+        }
+    }
+
+    public void checkifMessageWasSuccessFullySent(Message message) {
+        CBLogger.d("Message ID: " + message.getId() + " Message: " + message.getMessage() + " MessageDeliveryStatus: ", String.valueOf(message.getMessageDeliveryStatus()));
+        if (message.getMessageDeliveryStatus() == MessageDeliveryStatus.SEND_FAILED.getValue() ||
+                message.getMessageDeliveryStatus() == MessageDeliveryStatus.PENDING.getValue()) {
+           CBLogger.d("Message API", "Resending");
+            getBotResponse(message);
+        }
+        else{
+            CBLogger.d("Message API", "Not Resending");
+        }
+    }
+
+    public void saveMessageIntoDB(Message message) {
+        MessageDTO messageDTO = new MessageDTO(message);
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        realm.copyToRealmOrUpdate(messageDTO);
+        realm.commitTransaction();
     }
 }

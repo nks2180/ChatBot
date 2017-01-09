@@ -18,7 +18,6 @@ import com.app.chatbot.R;
 import com.app.chatbot.adapter.ChatAdapter;
 import com.app.chatbot.component.ApplicationComponent;
 import com.app.chatbot.model.Message;
-import com.app.chatbot.model.MessageDTO;
 import com.app.chatbot.model.MessageDeliveryStatus;
 import com.app.chatbot.presenter.ChatPresenter;
 import com.app.chatbot.presenter.ChatView;
@@ -33,9 +32,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import io.realm.Realm;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
 
 /**
  * @author niranjan
@@ -60,6 +56,7 @@ public class ChatActivity extends BaseViewPresenterActivity<ChatPresenter> imple
     ChatAdapter mAdapter;
 
     ConnectivityChangeReceiver connectivityChangeReceiver = new ConnectivityChangeReceiver();
+    boolean isFirstTime = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +64,7 @@ public class ChatActivity extends BaseViewPresenterActivity<ChatPresenter> imple
         mContext = this;
 
         setUpRecyclerView();
-        getMessagesFromDB();
+        chatPresenter.getChatMessagesFromDB();
     }
 
     private void setUpRecyclerView() {
@@ -121,7 +118,7 @@ public class ChatActivity extends BaseViewPresenterActivity<ChatPresenter> imple
         message.setFromBot(true);
         message.setMessageDeliveryStatus(MessageDeliveryStatus.RECEIVED.getValue());
         messages.add(message);
-        saveMessageIntoDB(message);
+        chatPresenter.saveMessageIntoDB(message);
         changeMessageDeleiveryStatus(parentMessageCode, MessageDeliveryStatus.SENT.getValue());
         mAdapter.notifyDataSetChanged();
         recVwMessages.smoothScrollToPosition(messages.size() - 1);
@@ -130,12 +127,13 @@ public class ChatActivity extends BaseViewPresenterActivity<ChatPresenter> imple
     @Override
     public void onBotResponseFailed(String parentMessage, int parentMessageCode) {
         changeMessageDeleiveryStatus(parentMessageCode, MessageDeliveryStatus.SEND_FAILED.getValue());
-//        Message selfMessage = new Message();
-//        selfMessage.setId(parentMessageCode);
-//        selfMessage.setFromBot(false);
-//        selfMessage.setMessage(parentMessage);
-//        selfMessage.setMessageDeliveryStatus(MessageDeliveryStatus.SEND_FAILED.getValue());
-//        saveMessageIntoDB(selfMessage);
+    }
+
+    @Override
+    public void onChatMessagesFetchedFromDB(List<Message> ChatMessages) {
+        if (null != ChatMessages && ChatMessages.size() > 0)
+            messages.addAll(ChatMessages);
+        mAdapter.notifyDataSetChanged();
     }
 
     @OnClick(R.id.imgVw_send)
@@ -163,20 +161,14 @@ public class ChatActivity extends BaseViewPresenterActivity<ChatPresenter> imple
             message.setMessageDeliveryStatus(MessageDeliveryStatus.PENDING.getValue());
         else
             message.setMessageDeliveryStatus(MessageDeliveryStatus.SEND_FAILED.getValue());
-        saveMessageIntoDB(message);
+        chatPresenter.saveMessageIntoDB(message);
         messages.add(message);
         mAdapter.notifyDataSetChanged();
         recVwMessages.smoothScrollToPosition(messages.size() - 1);
         return message;
     }
 
-    private void saveMessageIntoDB(Message message) {
-        MessageDTO messageDTO = new MessageDTO(message);
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        realm.copyToRealmOrUpdate(messageDTO);
-        realm.commitTransaction();
-    }
+
 
     private int getRandomNumber() {
         Random rand = new Random();
@@ -184,33 +176,11 @@ public class ChatActivity extends BaseViewPresenterActivity<ChatPresenter> imple
     }
 
 
-    private void getMessagesFromDB() {
-        Realm realm = Realm.getDefaultInstance();
-        RealmQuery<MessageDTO> query = realm.where(MessageDTO.class);
-        RealmResults<MessageDTO> messageDTOs = query.findAll();
-
-        if (null != messageDTOs && messageDTOs.size() > 0) {
-            for (MessageDTO messageDTO : messageDTOs) {
-                Message message = new Message(messageDTO);
-                messages.add(message);
-                checkifMessageWasSuccessFullySent(message);
-            }
-            mAdapter.notifyDataSetChanged();
-        }
-    }
-
-    private void checkifMessageWasSuccessFullySent(Message message) {
-        if (message.getMessageDeliveryStatus() == MessageDeliveryStatus.SEND_FAILED.getValue() ||
-                message.getMessageDeliveryStatus() == MessageDeliveryStatus.PENDING.getValue()) {
-            chatPresenter.getBotResponse(message);
-        }
-    }
-
-    private void changeMessageDeleiveryStatus(int messageID, int status){
+    public void changeMessageDeleiveryStatus(int messageID, int status){
         for (Message message : messages) {
             if (message.getId() == messageID){
                 message.setMessageDeliveryStatus(status);
-                saveMessageIntoDB(message);
+                chatPresenter.saveMessageIntoDB(message);
             }
         }
     }
@@ -218,9 +188,13 @@ public class ChatActivity extends BaseViewPresenterActivity<ChatPresenter> imple
     public class ConnectivityChangeReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (isFirstTime){
+                isFirstTime = false;
+                return;
+            }
             if (CBUtils.isConnected(context)) {
                 for (Message message : messages) {
-                    checkifMessageWasSuccessFullySent(message);
+                    chatPresenter.checkifMessageWasSuccessFullySent(message);
                 }
             }
         }

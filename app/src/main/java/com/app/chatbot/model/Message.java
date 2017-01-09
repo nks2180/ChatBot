@@ -87,6 +87,7 @@ public class Message implements Serializable{
 
     }
    public Message(MessageDTO messageDTO){
+       setId(messageDTO.getId());
        setMessage(messageDTO.getMessage());
        setFromBot(messageDTO.isFromBot());
        setChatBotID(messageDTO.getChatBotID());

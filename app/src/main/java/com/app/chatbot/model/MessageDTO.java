@@ -85,10 +85,12 @@ public class MessageDTO extends RealmObject {
 
     }
     public MessageDTO (Message message){
+        setId(message.getId());
         setMessage(message.getMessage());
         setFromBot(message.isFromBot());
         setChatBotID(message.getChatBotID());
         setChatBotName(message.getChatBotName());
         setEmotion(message.getEmotion());
+        setMessageDeliveryStatus(message.getMessageDeliveryStatus());
     }
 }

@@ -9,20 +9,20 @@
         android:id="@+id/relLyt_chat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxWidth="250dp"
-        android:layout_marginRight="@dimen/margin_ten"
         android:layout_marginLeft="@dimen/margin_ten"
+        android:layout_marginRight="@dimen/margin_ten"
+        android:maxWidth="250dp"
         android:orientation="vertical">
 
         <com.app.chatbot.customViews.CBTextView
             android:id="@+id/txtVw_chatMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxWidth="250dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/margin_ten"
             android:layout_marginRight="@dimen/margin_ten"
             android:autoLink="all"
+            android:maxWidth="250dp"
             android:paddingBottom="@dimen/margin_three"
             android:text="haksasdh"
             android:textColor="@color/clr_chat_text_content"
@@ -38,5 +38,16 @@
             android:gravity="center_vertical"
             android:textColor="@color/clr_chat_date"
             android:textSize="10sp"/>
+
+        <ImageView
+            android:id="@+id/imgVw_status"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_marginTop="@dimen/margin_ten"
+            android:layout_toRightOf="@id/txtVw_chatMessage"
+            android:layout_marginLeft="@dimen/margin_ten"
+            android:src="@drawable/ic_tick"/>
     </RelativeLayout>
+
+
 </RelativeLayout>

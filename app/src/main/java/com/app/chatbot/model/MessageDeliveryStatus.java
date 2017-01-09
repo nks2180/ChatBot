@@ -5,5 +5,15 @@ package com.app.chatbot.model;
  */
 
 public enum MessageDeliveryStatus {
-    PENDING, SENT, RECEIVED, SEND_FAILED
+    PENDING(0), SENT(1), RECEIVED(2), SEND_FAILED(3);
+
+    private final int value;
+
+    private MessageDeliveryStatus(int value) {
+        this.value = value;
+    }
+
+    public int getValue() {
+        return value;
+    }
 }

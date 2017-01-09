@@ -14,6 +14,7 @@ import java.io.Serializable;
 @JsonObject
 public class Message implements Serializable{
 
+    int id;
     @JsonField(name = "chatBotName")
     private String chatBotName;
     @JsonField(name = "chatBotID")
@@ -24,6 +25,15 @@ public class Message implements Serializable{
     private String emotion;
 
     private boolean fromBot;
+    private Integer messageDeliveryStatus;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getChatBotName() {
         return chatBotName;
@@ -65,6 +75,14 @@ public class Message implements Serializable{
         this.fromBot = fromBot;
     }
 
+    public Integer getMessageDeliveryStatus() {
+        return messageDeliveryStatus;
+    }
+
+    public void setMessageDeliveryStatus(Integer messageDeliveryStatus) {
+        this.messageDeliveryStatus = messageDeliveryStatus;
+    }
+
     public Message(){
 
     }
@@ -74,5 +92,6 @@ public class Message implements Serializable{
        setChatBotID(messageDTO.getChatBotID());
        setChatBotName(messageDTO.getChatBotName());
        setEmotion(messageDTO.getEmotion());
+       setMessageDeliveryStatus(messageDTO.getMessageDeliveryStatus());
    }
 }

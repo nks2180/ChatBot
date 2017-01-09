@@ -3,13 +3,16 @@ package com.app.chatbot.viewholder;/**
  */
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.app.chatbot.R;
 import com.app.chatbot.customViews.CBTextView;
 import com.app.chatbot.model.Message;
+import com.app.chatbot.model.MessageDeliveryStatus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,6 +32,8 @@ public class ChatTextViewHolder extends RecyclerView.ViewHolder {
     CBTextView txtVwDateTime;
     @BindView(R.id.relLyt_chat)
     RelativeLayout relLytChat;
+    @BindView(R.id.imgVw_status)
+    ImageView imgVw_status;
 
 
     private RelativeLayout.LayoutParams chatLayoutParams;
@@ -48,6 +53,12 @@ public class ChatTextViewHolder extends RecyclerView.ViewHolder {
             showIncomingMessage();
         } else {
             showOutGoingMessage();
+        }
+        if (message.getMessageDeliveryStatus() == MessageDeliveryStatus.PENDING.ordinal() || message.getMessageDeliveryStatus() == MessageDeliveryStatus.SEND_FAILED.ordinal()){
+            imgVw_status.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_msg_waiting));
+        }
+        else{
+            imgVw_status.setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_tick));
         }
     }
 

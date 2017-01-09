@@ -11,5 +11,7 @@ import com.app.chatbot.model.Message;
 
 public interface ChatView extends BaseView{
 
-    public void onBotResponseCame(Message message);
+    public void onBotResponseCame(Message message, int parentMesaageCode);
+
+    public void onBotResponseFailed(String message, int messageId);
 }

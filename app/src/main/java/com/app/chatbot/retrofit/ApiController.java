@@ -1,6 +1,7 @@
 package com.app.chatbot.retrofit;
 
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -21,7 +22,7 @@ public class ApiController<T> {
     public void hitApi(final RequestBuilder requestBuilder, final ApiDataReceiveCallback callback) {
         Call<String> call = getApiFromApiType(requestBuilder.apiType,requestBuilder.getExtraParameters());
         if(call != null) {
-            call.enqueue(new ApiResponseCallBack(callback,requestBuilder.apiType));
+            call.enqueue(new ApiResponseCallBack(callback,requestBuilder.apiType, requestBuilder.getExtraParameters()));
         }
     }
 
@@ -39,10 +40,12 @@ public class ApiController<T> {
 
         private final WeakReference<ApiDataReceiveCallback> apiDataReceiveCallbackWeakReference;
         private int type;
+        HashMap<String, String> params;
 
-        ApiResponseCallBack(ApiDataReceiveCallback apiDataReceiveCallback, int type) {
+        ApiResponseCallBack(ApiDataReceiveCallback apiDataReceiveCallback, int type, HashMap<String, String> params) {
             this.apiDataReceiveCallbackWeakReference = new WeakReference<>(apiDataReceiveCallback);
             this.type = type;
+            this.params = params;
         }
 
         @Override
@@ -59,11 +62,14 @@ public class ApiController<T> {
         private void handleApiResponse(final String response) throws Exception {
             ApiDataReceiveCallback apiDataReceiveCallback = apiDataReceiveCallbackWeakReference.get();
             if (apiDataReceiveCallback != null)
-                apiDataReceiveCallback.onDataReceived(response, type);
+                apiDataReceiveCallback.onDataReceived(response, type, Integer.valueOf(params.get("id")));
         }
 
         @Override
         public void onFailure(Call call, Throwable t) {
+            ApiDataReceiveCallback apiDataReceiveCallback = apiDataReceiveCallbackWeakReference.get();
+            if (apiDataReceiveCallback != null)
+                apiDataReceiveCallback.onError(type, params);
             t.printStackTrace();
         }
     }

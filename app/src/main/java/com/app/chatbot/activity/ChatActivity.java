@@ -67,6 +67,8 @@ public class ChatActivity extends BaseViewPresenterActivity<ChatPresenter> imple
         chatPresenter.getChatMessagesFromDB();
     }
 
+
+
     private void setUpRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -97,7 +99,7 @@ public class ChatActivity extends BaseViewPresenterActivity<ChatPresenter> imple
     protected void onResume() {
         super.onResume();
         if (null != connectivityChangeReceiver)
-        registerReceiver(connectivityChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+            registerReceiver(connectivityChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
     @Override
@@ -169,16 +171,15 @@ public class ChatActivity extends BaseViewPresenterActivity<ChatPresenter> imple
     }
 
 
-
     private int getRandomNumber() {
         Random rand = new Random();
         return rand.nextInt(999999) + 1;
     }
 
 
-    public void changeMessageDeleiveryStatus(int messageID, int status){
+    public void changeMessageDeleiveryStatus(int messageID, int status) {
         for (Message message : messages) {
-            if (message.getId() == messageID){
+            if (message.getId() == messageID) {
                 message.setMessageDeliveryStatus(status);
                 chatPresenter.saveMessageIntoDB(message);
             }
@@ -188,7 +189,7 @@ public class ChatActivity extends BaseViewPresenterActivity<ChatPresenter> imple
     public class ConnectivityChangeReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (isFirstTime){
+            if (isFirstTime) {
                 isFirstTime = false;
                 return;
             }

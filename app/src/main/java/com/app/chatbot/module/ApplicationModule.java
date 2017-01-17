@@ -17,16 +17,16 @@ import dagger.Provides;
 @Module
 public class ApplicationModule {
 
-    private final CBApplication lybrate;
+    private final CBApplication applicaton;
 
-    public ApplicationModule(CBApplication lybrate) {
-        this.lybrate = lybrate;
+    public ApplicationModule(CBApplication applicaton) {
+        this.applicaton = applicaton;
     }
 
     @Provides
     @Singleton
     Context provideApplicationContext() {
-        return lybrate;
+        return applicaton;
     }
 
     @Provides
